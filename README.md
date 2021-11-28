@@ -69,6 +69,10 @@ sifreyi gir
 ------------------------------------------------
 quiz>models.py
 Simdi model olusturacagiz. Frontend ne istiyorsa ona uygun endpointler döndürmem gerekiyor. Kategori , Ders ve Sorular diye modeller olusturucaz. Sorulari olusturmak icin bir arayüz olusturmayacagiz.Cünkü admin icin hazir bir panelimiz var. Oturup da admin icin bir panel yazmamiza gerek yok.Admin yetkili bir kullanici olusturup admin panele girip sorulari olusturmasini saglayabiliriz.Bunu django admin panelinden yapacagiz. Djang admin panelinde customization yapacagiz. Admin paneli basli basina bir derya. Customization veya override yapilabilir.
+
+class Category(models.Model):...
+class Quiz(models.Model):...
+class Questions(models.Model):...
 ------------------------------------------------
 ------------------------------------------------
 ------------------------------------------------
