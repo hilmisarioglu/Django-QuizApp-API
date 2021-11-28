@@ -3,6 +3,11 @@ from django.db.models.fields.related import ForeignKey
 
 # Create your models here.
 
+class Update(models.Model):
+    updated = models.DateTimeField(auto_now_add=True) #update ettiginde tarih kaydeder
+    class Meta:
+        abstract = True # DB ye kaydetmez
+    
 class Category(models.Model):
     name = models.CharField(max_length=100 , verbose_name = 'Category Name' )
     #verbose_name yazarak admin panelini override ederek nasil gözükmesini istiyorsak onu gösterebiliriz.Hem verbose_name hem de verbose_name_plural, nesneleri insan tarafından okunabilir hale getirmenin veya onları insan tarafından okunabilir bir noktaya dönüştürmenin yollarıdır.
@@ -30,6 +35,27 @@ class Quiz(models.Model):
     class Meta:
         verbose_name_plural = 'Quizzes'
 
-class Question(models.Model):
+class Question(Update):
+    SCALE = (
+        (0 , 'Beginner'),
+        (1, 'Intermediate'),
+        (2, 'Advanced'),
+    )
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     title = models.CharField(max_length=1000, verbose_name= 'Question')
+    difficulty = models.IntegerField(choices = SCALE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return self.title
+    
+class Answer(Update):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    answer_text = models.CharField(max_length=250, verbose_name= 'Answer')
+    is_right = models.BooleanField(default=False)
+
+    #django-abstract-models inheritance diye bir kavram var. Örnegin iki farkli class ta updated isminde ayi sekilde kullandigim field im var. Bu daha büyük modeller icin daha fazla kullanilacak demektir.Tekrar tekrar yazmaya gerek yok.Ortak kullanilan fieldlari bir classta yazariz bu db ye kaydedilmez. Daha sinra bu classttan inherit edilir.
+    def __str__(self):
+        return self.answer_text
+    
+    
