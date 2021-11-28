@@ -82,6 +82,24 @@ database e modelleri kaydetmek icin
 
 quiz > admin.py DB olustuktan sonra ben bunlari admin paneline register etmem gerekiyor.
 from .models import Category, Quiz, Question, Answer ... 
+
+database e modellerim geldi. Simdi kategorileri veya sorulari manuel eklemem gerekiyor. Fakat tek tek hepsini eklemek zor. Ic ice gecmis veriler var. Bunlarin takibini ve girisini kolaylastirmak icin bir paket mevcut.(TabularInline). 
+https://docs.djangoproject.com/en/3.2/ref/contrib/admin/
+TabularInline kullanarak 2 modeli ic ice gösterebiliriz. Girisler kolaylasmis olur. 
+$ python -m pip install django-nested-admin
+$ pip freeze > requirements.txt
+INSTALLED_APPS = [
+    'rest_framework',
+    'quiz',
+    'nested_admin',
+]
+
+quiz_prj > urls.py a path ekle
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('nested_admin/', include('nested_admin.urls'))
+]
+
 ------------------------------------------------
 ------------------------------------------------
 ------------------------------------------------

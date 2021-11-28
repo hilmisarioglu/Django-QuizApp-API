@@ -1,6 +1,9 @@
 asgiref==3.4.1
 Django==3.2.9
+django-nested-admin==3.3.3
 djangorestframework==3.12.4
 python-decouple==3.5
+python-monkey-business==1.0.0
 pytz==2021.3
+six==1.16.0
 sqlparse==0.4.2
