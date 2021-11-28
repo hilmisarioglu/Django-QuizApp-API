@@ -10,16 +10,13 @@ class QuestionTabularInline(nested_admin.NestedTabularInline):
     model = Question
     inlines = [AnswerTabularInline]
 
-class QuizTabularInline(nested_admin.NestedTabularInline):
+class QuizAdmin(nested_admin.NestedModelAdmin):
     model = Quiz
     inlines = [QuestionTabularInline]
 
-class CategoryAdmin(nested_admin.NestedModelAdmin):
-    model = Category
-    inlines = [QuizTabularInline]
 
 
-admin.site.register(Category,CategoryAdmin)
-admin.site.register(Quiz)
+admin.site.register(Category)
+admin.site.register(Quiz,QuizAdmin)
 admin.site.register(Question)
 admin.site.register(Answer)

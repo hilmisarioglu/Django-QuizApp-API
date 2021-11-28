@@ -84,6 +84,7 @@ quiz > admin.py DB olustuktan sonra ben bunlari admin paneline register etmem ge
 from .models import Category, Quiz, Question, Answer ... 
 
 database e modellerim geldi. Simdi kategorileri veya sorulari manuel eklemem gerekiyor. Fakat tek tek hepsini eklemek zor. Ic ice gecmis veriler var. Bunlarin takibini ve girisini kolaylastirmak icin bir paket mevcut.(TabularInline). 
+https://django-nested-admin.readthedocs.io/en/latest/quickstart.html
 https://docs.djangoproject.com/en/3.2/ref/contrib/admin/
 TabularInline kullanarak 2 modeli ic ice gösterebiliriz. Girisler kolaylasmis olur. 
 $ python -m pip install django-nested-admin
@@ -100,9 +101,69 @@ urlpatterns = [
     path('nested_admin/', include('nested_admin.urls'))
 ]
 
+Geriye kalan islemler admin.py da düzenlendi.
+
 ------------------------------------------------
+
+Geldik endpoint belirlemeye. Su an 3 tane endpoint belirleyecegim. Frontendde kategorileri koyacaklar. Kategoriyi sectigi zaman kullanici o kategorilerin icerisinde hangi quizler var onlari görecek. Quizi sectiginde de quiz icerisindeki sorulara ulasacak. Yapmak istedigimiz sey bu.Fakat öncelikle urls leri ayarlamam gerekiyor.
+
+quiz icine urls.py olusturalim.
+
+quiz_prj > urls.py
+from django.contrib import admin
+from django.urls import path, include
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('nested_admin/', include('nested_admin.urls')),
+    path('quiz' , include('quiz.urls')),
+]
+
+quiz>urls.py 
+from django.urls import path
+urlpatterns = [
+    path('', , name = ''),
+]
+
 ------------------------------------------------
+quiz icerisine serializers.py olusturalim
+Önce söyle bir sey yapacagiz. Category endpoint i icin, öncelikle bana category_name dönsün, id sini dönsün ve icinde kac tane kategori var onu söylesin. Genelde functionbased kullaniliyor fakat biz bu projede classedbased kullanacagiz. Bazi methodlari override edecegiz. GenericViews ler üzerinden gidecegiz endpointlerde. Biz projede update delete yazmayacagiz. Liste seklinde gönderecegiz frontende. Gercek projelerde de Rest-framework su sekilde kullanilir. Mesela bir API den veri cekiyorsunuz. O veri frontend ne istemisse onu listelemek icin gönderilir. Genelde create update cok yapilmiyor. API endpointleri Frontende List olarak gönderiyoruz. 
 ------------------------------------------------
+quiz > models.py a git
+class Category altina sunu ekle
+    @property
+    def quiz_count(self):
+        return self.quiz_set.count()
+bu bana Cateroryi döndürürken Quiz icinde kac tane obje var onu gösterecek. 
+
+quiz > serializers.py a git CategorySerializer yaz
+from rest_framework import serializers
+from .models import Category
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = (
+            'id' , 
+            'name',
+            'quiz_count'
+        ) 
+
+quiz > views.py a git CategorySerializersi import et 
+from django.shortcuts import render
+from rest_framework import generics
+from .models import Category
+from .serializers import CategorySerializer 
+# Create your views here.
+class CategoryList(generics.ListAPIView):
+    serializer_class = CategorySerializer
+    queryset = Category.objects.all()
+
+quiz > urls.py a git viewsteki Category i import et
+from django.urls import path
+from .views import CategoryList
+urlpatterns = [
+    path('', CategoryList.as_view(), name = 'category'),
+]
+
 ------------------------------------------------
 ------------------------------------------------
 ------------------------------------------------

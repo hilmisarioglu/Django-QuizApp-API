@@ -16,6 +16,10 @@ class Category(models.Model):
     
     class Meta:
         verbose_name_plural = 'Categories'
+    
+    @property
+    def quiz_count(self):
+        return self.quiz_set.count()
 
 class Quiz(models.Model):
     title = models.CharField(max_length=100 , verbose_name = 'Quiz Title')
@@ -43,6 +47,7 @@ class Question(Update):
     )
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     title = models.CharField(max_length=1000, verbose_name= 'Question')
+    # title icine blank=True , null=True yazabilirdik.blank=True Admin panelinde bos birakabilirsin demek. Stringlerde null=True otomatik geliyor tekrardan yazmaniza gerek yok. null=True DB ye null olarak kaydedilmesini saglar. DateTimeField veya IntegerField larda blank=True yazdiysak null=True da ister. 
     difficulty = models.IntegerField(choices = SCALE)
     date_created = models.DateTimeField(auto_now_add=True)
     
