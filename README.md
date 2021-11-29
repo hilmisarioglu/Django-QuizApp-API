@@ -1,4 +1,5 @@
 # Django-QuizApp-API
+models - admin - (urls) - serializers - views - urls
 ------------------------------------------------
 env kurup active ediyoruz
 $ python -m venv qenv2
@@ -195,7 +196,7 @@ class CategoryDetail(generics.ListAPIView):
 
 
 quiz > urls.py a git viewsteki CategoryDetail i import et
-path('<category>', c.as_view(), name = 'category-detail'),
+path('<category>', CategoryDetail.as_view(), name = 'category-detail'),
 
 ------------------------------------------------
 
