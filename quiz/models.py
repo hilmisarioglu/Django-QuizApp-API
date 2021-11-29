@@ -38,6 +38,10 @@ class Quiz(models.Model):
         return self.title
     class Meta:
         verbose_name_plural = 'Quizzes'
+        
+    @property
+    def question_count(self):
+        return self.question_set.count()
 
 class Question(Update):
     SCALE = (

@@ -128,6 +128,7 @@ urlpatterns = [
 quiz icerisine serializers.py olusturalim
 Önce söyle bir sey yapacagiz. Category endpoint i icin, öncelikle bana category_name dönsün, id sini dönsün ve icinde kac tane kategori var onu söylesin. Genelde functionbased kullaniliyor fakat biz bu projede classedbased kullanacagiz. Bazi methodlari override edecegiz. GenericViews ler üzerinden gidecegiz endpointlerde. Biz projede update delete yazmayacagiz. Liste seklinde gönderecegiz frontende. Gercek projelerde de Rest-framework su sekilde kullanilir. Mesela bir API den veri cekiyorsunuz. O veri frontend ne istemisse onu listelemek icin gönderilir. Genelde create update cok yapilmiyor. API endpointleri Frontende List olarak gönderiyoruz. 
 ------------------------------------------------
+#4lü
 quiz > models.py a git
 class Category altina sunu ekle
     @property
@@ -147,7 +148,7 @@ class CategorySerializer(serializers.ModelSerializer):
             'quiz_count'
         ) 
 
-quiz > views.py a git CategorySerializersi import et 
+quiz > views.py a git CategorySerializersi import et CategoryList yaz
 from django.shortcuts import render
 from rest_framework import generics
 from .models import Category
@@ -165,7 +166,39 @@ urlpatterns = [
 ]
 
 ------------------------------------------------
+#4lü
+quiz > models.py a git
+class Quiz altina sunu yaz 
+    @property
+    def question_count(self):
+        return self.question_set.count()
+bu bana Quiz döndürürken kac tane question var onu dönecek.
+
+quiz > serializers.py a git CategoryDetailSerializer yaz
+class CategoryDetailSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = (
+            'title',
+            'question_count',
+            )
+
+quiz > views.py a git CategoryDetailSerializer import et CategoryDetail yaz
+from .models import Category , Quiz
+class CategoryDetail(generics.ListAPIView):
+    serializer_class = CategoryDetailSerializer
+    def get_queryset(self):
+        queryset = Quiz.objects.all()
+        category = self.kwargs['category'] #backend #frontend
+        queryset = queryset.filter(category__name=category) # categiry modelindeki name ne ise url den aldigim isme esitle ve bunu filtrele. Benim Quiz imde categoryler benim numara olarak kayitli. Foreign_key iliskisinden dolayi oradaki id sini verir. Benim bu id leri bilmem gerekiyor filtreleme yapmam icin. Bunu quizin icindeki category fieldinden aliyorum. 
+        return queryset   
+
+
+quiz > urls.py a git viewsteki CategoryDetail i import et
+path('<category>', c.as_view(), name = 'category-detail'),
+
 ------------------------------------------------
+
 ------------------------------------------------
 ------------------------------------------------
 ------------------------------------------------
